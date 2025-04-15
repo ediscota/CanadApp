@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Firebase Test 99',
+      title: 'Firebase Test prova 99',
       home: FirebaseTestScreen(),
     );
   }
