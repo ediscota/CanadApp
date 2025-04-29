@@ -1,22 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const CanadApp());
-}
-
-class CanadApp extends StatelessWidget {
-  const CanadApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CanadApp',
-      debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
-    );
-  }
-}
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -35,9 +18,9 @@ class _LoginPageState extends State<LoginScreen> {
       debugPrint('Email: ${_emailController.text}');
       debugPrint('Password: ${_passwordController.text}');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login riuscito!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Login riuscito!')));
     }
   }
 
@@ -73,17 +56,11 @@ class _LoginPageState extends State<LoginScreen> {
             // Logo e nome app
             Column(
               children: [
-                Image.asset(
-                  'assets/canadapp_logo.png',
-                  width: 150,
-                ),
+                Image.asset('assets/canadapp_logo.png', width: 150),
                 const SizedBox(height: 10),
                 const Text(
                   'CanadApp',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -149,7 +126,7 @@ class _LoginPageState extends State<LoginScreen> {
             ),
           ],
         ),
-     ),
-  );
+      ),
+    );
   }
 }
