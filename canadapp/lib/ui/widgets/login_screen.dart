@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginScreen> {
             // Logo e nome app
             Column(
               children: [
-                Image.asset('assets/canadapp_logo.png', width: 150),
+                const Image(image: AssetImage('assets/logo_canadapp.webp')),
                 const SizedBox(height: 10),
                 const Text(
                   'CanadApp',
