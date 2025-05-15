@@ -57,14 +57,9 @@ class _LoginPageState extends State<LoginScreen> {
             Column(
               children: [
                 const Image(image: AssetImage('assets/logo_canadapp.webp')),
-                const SizedBox(height: 10),
-                const Text(
-                  'CanadApp',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                ),
               ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
             // Form
             Form(
               key: _formKey,
