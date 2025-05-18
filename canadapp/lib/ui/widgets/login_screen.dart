@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../ui/viewmodels/login_view_model.dart';
+import '../../ui/widgets/aula_studio_screen.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -32,11 +34,9 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (success) {
-        // TODO: Navigazione alla schermata successiva
-        // Per ora placeholder
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => const PlaceholderScreen(),
+            builder: (_) => const AulaStudioScreen(),
           ),
         );
       }
