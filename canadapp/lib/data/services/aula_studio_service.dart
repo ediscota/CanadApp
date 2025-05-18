@@ -6,19 +6,27 @@ class AulaStudioService {
   static const String _docPath = 'config/aula_studio';
 
   Future<AulaStudio?> getDisponibilita() async {
-    final doc = await _firestore.doc(_docPath).get();
-    if (!doc.exists) return null;
-    final data = doc.data();
-    if (data == null) return null;
-    return AulaStudio.fromJson(data);
+    try {
+      final doc = await _firestore.doc(_docPath).get();
+      if (!doc.exists) return null;
+      final data = doc.data();
+      if (data == null) return null;
+      return AulaStudio.fromJson(data);
+    } catch (e) {
+      print('Errore durante il fetch della disponibilità: $e');
+      return null;
+    }
   }
   Future<void> setDisponibilita(int nuovaDisponibilita) async {
-    await _firestore.doc(_docPath).set({
-      'disponibilita': nuovaDisponibilita,
-    }, SetOptions(merge: true));
+    try {
+      await _firestore.doc(_docPath).set({
+        'disponibilita': nuovaDisponibilita,
+      }, SetOptions(merge: true));
+    } catch (e) {
+      print('Errore durante l\'aggiornamento della disponibilità: $e');
+    }
   }
-   /*
-  // Stream per aggiornamenti in tempo reale (opzionale)
+  // utilizzare questo metodo per ascoltare le modifiche in tempo reale
   Stream<AulaStudio> disponibilitaStream() {
     return _firestore.doc(_docPath).snapshots().map((snapshot) {
       final data = snapshot.data();
@@ -28,5 +36,5 @@ class AulaStudioService {
       return AulaStudio.fromJson(data);
     });
   }
-  */
+  
 }
