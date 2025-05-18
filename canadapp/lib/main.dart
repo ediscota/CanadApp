@@ -1,6 +1,11 @@
 import 'package:canadapp/ui/widgets/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+
+import 'data/services/user_service.dart';
+import 'data/repositories/user_repository.dart';
+import 'ui/viewmodels/login_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,10 +18,28 @@ class CanadApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CanadApp',
-      debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
+    return MultiProvider(
+      providers: [
+        // Service
+        Provider(create: (_) => UserService()),
+
+        // Repository che dipende dal Service
+        ProxyProvider<UserService, UserRepository>(
+          update: (_, service, __) => UserRepository(service),
+        ),
+
+        // ViewModel che dipende dal Repository
+        ChangeNotifierProxyProvider<UserRepository, LoginViewModel>(
+          create: (_) => LoginViewModel(UserRepository(UserService())),
+          update: (_, repo, __) => LoginViewModel(repo),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'CanadApp',
+        debugShowCheckedModeBanner: false,
+        home: const LoginScreen(),
+      ),
     );
   }
 }
+
