@@ -1,19 +1,15 @@
-class AulaStudio {
-  final int disponibilita;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  AulaStudio({
-    required this.disponibilita,
-  });
+part 'aula_studio.freezed.dart';
+part 'aula_studio.g.dart';
 
-  factory AulaStudio.fromJson(Map<String, dynamic> json) {
-    return AulaStudio(
-      disponibilita: json['disponibilita'],
-    );
-  }
+//Freezed per gestire la disponibilità delle aule studio come stato dell'applicazione
+@freezed
+class AulaStudio with _$AulaStudio {
+  const factory AulaStudio({
+    required int disponibilita,
+  }) = _AulaStudio;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'disponibilita': disponibilita,
-    };
-  }
+  factory AulaStudio.fromJson(Map<String, dynamic> json) =>
+      _$AulaStudioFromJson(json);
 }
