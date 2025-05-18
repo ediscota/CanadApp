@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../ui/viewmodels/aula_studio_view_model.dart';
 
 class AulaStudioScreen extends StatelessWidget {
   const AulaStudioScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<AulaStudioViewModel>();
+    final disponibilita = viewModel.stato?.disponibilita ?? 0;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -30,10 +35,10 @@ class AulaStudioScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          const Center(
+          Center(
             child: Text(
-              'Posti disponibili: n/m',
-              style: TextStyle(
+              'Posti disponibili: $disponibilita',
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: Colors.black87,
