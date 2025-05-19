@@ -11,5 +11,5 @@ class AulaStudio with _$AulaStudio {
   }) = _AulaStudio;
 
   factory AulaStudio.fromJson(Map<String, dynamic> json) =>
-      _$AulaStudioFromJson(json);
+      _$AulaStudioFromJson(json); 
 }

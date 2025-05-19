@@ -14,4 +14,10 @@ class AulaStudioRepository {
   Stream<AulaStudio> disponibilitaStream() {
     return _service.disponibilitaStream();
   }
+  Future<void> decrementaDisponibilita() {
+    return _service.decrementaDisponibilita();
+  }
+  Future<void> incrementaDisponibilita() {
+    return _service.incrementaDisponibilita();
+  }
 }

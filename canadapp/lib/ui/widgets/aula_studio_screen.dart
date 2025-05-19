@@ -1,3 +1,4 @@
+import 'package:canadapp/ui/widgets/qr_scanner_screen';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../ui/viewmodels/aula_studio_view_model.dart';
@@ -7,8 +8,8 @@ class AulaStudioScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<AulaStudioViewModel>();
-    final disponibilita = viewModel.stato?.disponibilita ?? 0;
+    final aulaStudioViewModel= context.watch<AulaStudioViewModel>();
+    final disponibilita = aulaStudioViewModel.stato?.disponibilita ?? 0;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -50,9 +51,19 @@ class AulaStudioScreen extends StatelessWidget {
             right: 20,
             child: FloatingActionButton(
               backgroundColor: const Color(0xFF1E88E5),
-              onPressed: () {
-                // Azione bottone fotocamera
-              },
+              onPressed: ()  async {
+                  final scannedCode = await Navigator.of(context).push<String>(
+                    MaterialPageRoute(
+                      builder: (_) => QrScannerScreen(
+                        onCodeScanned: (code) {},
+                      ),
+                    ),
+                  );
+                  if (scannedCode != null) {
+                    // Passa al ViewModel per aggiornare la disponibilità
+                    aulaStudioViewModel.handleQrCodeScanned(scannedCode);
+                  }
+                },
               child: const Icon(Icons.camera_alt, color: Colors.white),
             ),
           ),
