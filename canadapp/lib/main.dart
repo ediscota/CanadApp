@@ -1,4 +1,8 @@
-import 'package:canadapp/ui/widgets/login_screen.dart';
+import 'package:canadapp/data/repositories/sala_pesi_repository.dart';
+import 'package:canadapp/data/services/sala_pesi_service.dart';
+import 'package:canadapp/ui/screens/login_screen.dart';
+import 'package:canadapp/ui/viewmodels/home_screen_view_model.dart';
+import 'package:canadapp/ui/viewmodels/sala_pesi_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -26,13 +30,17 @@ class CanadApp extends StatelessWidget {
         // Service
         Provider(create: (_) => UserService()),
         Provider(create: (_) => AulaStudioService()),
+        Provider(create: (_) => SalaPesiService()),
 
         // Repository che dipende dal Service
         ProxyProvider<UserService, UserRepository>(
           update: (_, service, __) => UserRepository(service),
         ),
         ProxyProvider<AulaStudioService, AulaStudioRepository>(
-      update: (_, service, __) => AulaStudioRepository(service),
+          update: (_, service, __) => AulaStudioRepository(service),
+        ),
+        ProxyProvider<SalaPesiService, SalaPesiRepository>(
+          update: (_, service, __) => SalaPesiRepository(service),
         ),
 
         // ViewModel che dipende dal Repository
@@ -40,9 +48,21 @@ class CanadApp extends StatelessWidget {
           create: (_) => LoginViewModel(UserRepository(UserService())),
           update: (_, repo, __) => LoginViewModel(repo),
         ),
-            ChangeNotifierProxyProvider<AulaStudioRepository, AulaStudioViewModel>(
-          create: (_) => AulaStudioViewModel(AulaStudioRepository(AulaStudioService())),
+        ChangeNotifierProxyProvider<AulaStudioRepository, AulaStudioViewModel>(
+          create:
+              (_) => AulaStudioViewModel(
+                AulaStudioRepository(AulaStudioService()),
+              ),
           update: (_, repo, __) => AulaStudioViewModel(repo),
+        ),
+        ChangeNotifierProxyProvider(
+          create: (_) => HomeScreenViewModel(),
+          update: (_, _, _) => HomeScreenViewModel(),
+        ),
+        ChangeNotifierProxyProvider<SalaPesiRepository, SalaPesiViewModel>(
+          create:
+              (_) => SalaPesiViewModel(SalaPesiRepository(SalaPesiService())),
+          update: (_, repo, __) => SalaPesiViewModel(repo),
         ),
       ],
       child: MaterialApp(
@@ -53,4 +73,3 @@ class CanadApp extends StatelessWidget {
     );
   }
 }
-
