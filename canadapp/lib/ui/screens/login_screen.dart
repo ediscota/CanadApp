@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/login_view_model.dart';
 import '../screens/aula_studio_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,6 +38,28 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     }
+  }
+
+  void initState() {
+    super.initState();
+    loadSession();
+  }
+
+  void loadSession() async {
+    final result = await SharedPreferences.getInstance().then((prefs) async {
+      final email = prefs.getString('email');
+      final password = prefs.getString('password');
+
+      if (email != null && password != null) {
+        final viewModel = context.read<LoginViewModel>();
+        final success = await viewModel.login(email, password);
+        if (success) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const AulaStudioScreen()),
+          );
+        }
+      }
+    });
   }
 
   @override

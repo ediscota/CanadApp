@@ -1,7 +1,10 @@
 import 'package:canadapp/ui/screens/gestione_certificato_screen.dart';
+import 'package:canadapp/ui/screens/login_screen.dart';
 import 'package:canadapp/ui/screens/qr_scanner_screen.dart';
+import 'package:canadapp/ui/viewmodels/login_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../viewmodels/aula_studio_view_model.dart';
 
 class AulaStudioScreen extends StatelessWidget {
@@ -32,7 +35,7 @@ class AulaStudioScreen extends StatelessWidget {
               backgroundColor: Colors.white,
               child: Icon(Icons.person, color: Colors.black),
             ), //Icona utente in alto a destra
-            onSelected: (String value) {
+            onSelected: (String value) async {
               if (value == 'certificato') {
                 Navigator.push(
                   context,
@@ -42,9 +45,15 @@ class AulaStudioScreen extends StatelessWidget {
                 );
               } else if (value == 'logout') {
                 // TODO: implementa la logica di logout
-                Navigator.popUntil(
-                  context,
-                  (route) => route.isFirst,
+                final result = await SharedPreferences.getInstance().then((
+                  prefs,
+                ) async {
+                  final email = await prefs.remove('email');
+                  final password = await prefs.remove('password');
+                });
+
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
                 ); // ritorno al login
               }
             },
