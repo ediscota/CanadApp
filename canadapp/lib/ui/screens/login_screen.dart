@@ -2,6 +2,11 @@ import 'package:canadapp/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/login_view_model.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../viewmodels/login_view_model.dart';
+import '../screens/aula_studio_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -75,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 30),
-                    const Image(image: AssetImage('assets/logo_canadapp.webp')),
+                    const Image(image: AssetImage('assets/logo_app.png')),
                     const SizedBox(height: 30),
                     Form(
                       key: _formKey,
