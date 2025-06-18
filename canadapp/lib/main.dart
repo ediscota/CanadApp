@@ -1,14 +1,12 @@
-
 import 'package:canadapp/data/repositories/sala_pesi_repository.dart';
 import 'package:canadapp/data/services/sala_pesi_service.dart';
 import 'package:canadapp/ui/screens/login_screen.dart';
 import 'package:canadapp/ui/viewmodels/home_screen_view_model.dart';
 import 'package:canadapp/ui/viewmodels/sala_pesi_view_model.dart';
-import 'package:canadapp/ui/screens/login_screen.dart';
-import 'package:canadapp/ui/viewmodels/gestione_certificato_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+
 import 'data/services/user_service.dart';
 import 'data/repositories/user_repository.dart';
 import 'ui/viewmodels/login_view_model.dart';
@@ -44,8 +42,6 @@ class CanadApp extends StatelessWidget {
         ProxyProvider<SalaPesiService, SalaPesiRepository>(
           update: (_, service, __) => SalaPesiRepository(service),
         ),
-
-        ChangeNotifierProvider(create: (_) => GestioneCertificatoViewModel()),
 
         // ViewModel che dipende dal Repository
         ChangeNotifierProxyProvider<UserRepository, LoginViewModel>(

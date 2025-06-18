@@ -1,13 +1,6 @@
 import 'package:canadapp/ui/screens/qr_scanner_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:canadapp/ui/screens/gestione_certificato_screen.dart';
-import 'package:canadapp/ui/screens/login_screen.dart';
-import 'package:canadapp/ui/screens/qr_scanner_screen.dart';
-import 'package:canadapp/ui/viewmodels/login_view_model.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../viewmodels/aula_studio_view_model.dart';
 
 class AulaStudioScreen extends StatelessWidget {
