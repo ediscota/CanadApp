@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/repositories/user_repository.dart';
 import '../../domain/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final UserRepository _repository;
@@ -28,6 +29,11 @@ class LoginViewModel extends ChangeNotifier {
         return false;
       } else {
         _utente = result;
+        //Salva le credenziali in SharedPreferences
+        await SharedPreferences.getInstance().then((prefs) async {
+          await prefs.setString('email', email);
+          await prefs.setString('password', password);
+        });
         return true;
       }
     } catch (e) {
