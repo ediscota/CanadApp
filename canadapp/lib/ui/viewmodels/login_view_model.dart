@@ -1,4 +1,6 @@
+import 'package:canadapp/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../data/repositories/user_repository.dart';
 import '../../domain/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,7 +31,6 @@ class LoginViewModel extends ChangeNotifier {
         return false;
       } else {
         _utente = result;
-        //Salva le credenziali in SharedPreferences
         await SharedPreferences.getInstance().then((prefs) async {
           await prefs.setString('email', email);
           await prefs.setString('password', password);
@@ -44,5 +45,22 @@ class LoginViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void loadSession(BuildContext context) async {
+    final result = await SharedPreferences.getInstance().then((prefs) async {
+      final email = prefs.getString('email');
+      final password = prefs.getString('password');
+
+      if (email != null && password != null) {
+        final viewModel = context.read<LoginViewModel>();
+        final success = await viewModel.login(email, password);
+        if (success) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const HomeScreen()),
+          );
+        }
+      }
+    });
   }
 }

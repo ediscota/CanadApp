@@ -1,8 +1,11 @@
 import 'package:canadapp/ui/screens/aula_studio_screen.dart';
+import 'package:canadapp/ui/screens/gestione_certificato_screen.dart';
+import 'package:canadapp/ui/screens/login_screen.dart';
 import 'package:canadapp/ui/screens/sala_pesi_screen.dart';
 import 'package:canadapp/ui/viewmodels/home_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,7 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        toolbarHeight: 70,
         backgroundColor: const Color(0xFF1E88E5), // Colore blu
         title: const Text(
           'CanadApp',
@@ -30,12 +32,33 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
         actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: CircleAvatar(
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0)),
+          PopupMenuButton<String>(
+            icon: CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(Icons.person, color: Colors.black),
-            ),
+            ), //Icona utente in alto a destra
+            onSelected: (String value) async {
+              if (value == 'certificato') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => GestioneCertificatoScreen(),
+                  ),
+                );
+              } else if (value == 'logout') {
+                // TODO: implementa la logica di logout
+                viewModel.logout(context); // ritorno al login
+              }
+            },
+            itemBuilder:
+                (BuildContext context) => [
+                  PopupMenuItem(
+                    value: 'certificato',
+                    child: Text('Gestione Certificato'),
+                  ),
+                  PopupMenuItem(value: 'logout', child: Text('Logout')),
+                ],
           ),
         ],
       ),
