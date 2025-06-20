@@ -1,3 +1,5 @@
+import 'package:canadapp/data/repositories/gestione_certificato_repository.dart';
+import 'package:canadapp/data/services/gestione_certificato_service.dart';
 import 'package:canadapp/ui/screens/login_screen.dart';
 import 'package:canadapp/ui/viewmodels/gestione_certificato_view_model.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,7 @@ class CanadApp extends StatelessWidget {
         // Service
         Provider(create: (_) => UserService()),
         Provider(create: (_) => AulaStudioService()),
+        Provider(create: (_) => GestioneCertificatoService()),
 
         // Repository che dipende dal Service
         ProxyProvider<UserService, UserRepository>(
@@ -35,8 +38,10 @@ class CanadApp extends StatelessWidget {
         ProxyProvider<AulaStudioService, AulaStudioRepository>(
           update: (_, service, __) => AulaStudioRepository(service),
         ),
-
-        ChangeNotifierProvider(create: (_) => GestioneCertificatoViewModel()),
+        ProxyProvider<
+          GestioneCertificatoService,
+          GestioneCertificatoRepository
+        >(update: (_, service, __) => GestioneCertificatoRepository(service)),
 
         // ViewModel che dipende dal Repository
         ChangeNotifierProxyProvider<UserRepository, LoginViewModel>(
@@ -49,6 +54,16 @@ class CanadApp extends StatelessWidget {
                 AulaStudioRepository(AulaStudioService()),
               ),
           update: (_, repo, __) => AulaStudioViewModel(repo),
+        ),
+        ChangeNotifierProxyProvider<
+          GestioneCertificatoRepository,
+          GestioneCertificatoViewModel
+        >(
+          create:
+              (_) => GestioneCertificatoViewModel(
+                GestioneCertificatoRepository(GestioneCertificatoService()),
+              ),
+          update: (_, repo, __) => GestioneCertificatoViewModel(repo),
         ),
       ],
       child: MaterialApp(

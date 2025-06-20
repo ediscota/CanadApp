@@ -32,6 +32,7 @@ class LoginViewModel extends ChangeNotifier {
         await SharedPreferences.getInstance().then((prefs) async {
           await prefs.setString('email', email);
           await prefs.setString('password', password);
+          await prefs.setString('userId', _utente!.id);
         });
         return true;
       }
