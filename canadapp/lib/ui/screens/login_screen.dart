@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 30),
-                    const Image(image: AssetImage('assets/logo_canadapp.webp')),
+                    const Image(image: AssetImage('assets/logo_app.png')),
                     const SizedBox(height: 30),
                     Form(
                       key: _formKey,

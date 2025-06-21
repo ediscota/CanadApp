@@ -6,6 +6,9 @@ import 'package:canadapp/ui/viewmodels/sala_pesi_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:canadapp/data/repositories/gestione_certificato_repository.dart';
+import 'package:canadapp/data/services/gestione_certificato_service.dart';
+import 'package:canadapp/ui/viewmodels/gestione_certificato_view_model.dart';
 
 import 'data/services/user_service.dart';
 import 'data/repositories/user_repository.dart';
@@ -31,6 +34,7 @@ class CanadApp extends StatelessWidget {
         Provider(create: (_) => UserService()),
         Provider(create: (_) => AulaStudioService()),
         Provider(create: (_) => SalaPesiService()),
+        Provider(create: (_) => GestioneCertificatoService()),
 
         // Repository che dipende dal Service
         ProxyProvider<UserService, UserRepository>(
@@ -42,6 +46,10 @@ class CanadApp extends StatelessWidget {
         ProxyProvider<SalaPesiService, SalaPesiRepository>(
           update: (_, service, __) => SalaPesiRepository(service),
         ),
+        ProxyProvider<
+          GestioneCertificatoService,
+          GestioneCertificatoRepository
+        >(update: (_, service, __) => GestioneCertificatoRepository(service)),
 
         // ViewModel che dipende dal Repository
         ChangeNotifierProxyProvider<UserRepository, LoginViewModel>(
@@ -63,6 +71,16 @@ class CanadApp extends StatelessWidget {
           create:
               (_) => SalaPesiViewModel(SalaPesiRepository(SalaPesiService())),
           update: (_, repo, __) => SalaPesiViewModel(repo),
+        ),
+        ChangeNotifierProxyProvider<
+          GestioneCertificatoRepository,
+          GestioneCertificatoViewModel
+        >(
+          create:
+              (_) => GestioneCertificatoViewModel(
+                GestioneCertificatoRepository(GestioneCertificatoService()),
+              ),
+          update: (_, repo, __) => GestioneCertificatoViewModel(repo),
         ),
       ],
       child: MaterialApp(

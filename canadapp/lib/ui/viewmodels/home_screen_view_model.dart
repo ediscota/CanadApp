@@ -16,6 +16,7 @@ class HomeScreenViewModel extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('email');
     await prefs.remove('password');
+    await prefs.remove('userId');
 
     Navigator.of(
       context,
