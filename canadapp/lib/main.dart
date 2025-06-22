@@ -67,14 +67,10 @@ class CanadApp extends StatelessWidget {
           create: (_) => HomeScreenViewModel(),
           update: (_, _, _) => HomeScreenViewModel(),
         ),
-       ChangeNotifierProxyProvider<SalaPesiRepository, SalaPesiViewModel>(
-          create: (_) => SalaPesiViewModel.empty(),
-          update: (_, repo, previous) {
-            previous ??= SalaPesiViewModel.empty();
-            previous.repository = repo;
-            previous.fetchPrenotazioniUtente(); // Richiamiamo il metodo quando cambia
-            return previous;
-          },
+        ChangeNotifierProxyProvider<SalaPesiRepository, SalaPesiViewModel>(
+          create:
+              (_) => SalaPesiViewModel(SalaPesiRepository(SalaPesiService())),
+          update: (_, repo, __) => SalaPesiViewModel(repo),
         ),
         ChangeNotifierProxyProvider<
           GestioneCertificatoRepository,

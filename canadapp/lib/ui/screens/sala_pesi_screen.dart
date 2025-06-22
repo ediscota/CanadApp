@@ -11,63 +11,60 @@ class SalaPesiScreen extends StatefulWidget {
 
 class _SalaPesiScreenState extends State<SalaPesiScreen> {
   @override
-Widget build(BuildContext context) {
-  final salaPesiViewModel = context.watch<SalaPesiViewModel>();
-  final items = salaPesiViewModel.prenotazioni;
+  Widget build(BuildContext context) {
+    final salaPesiViewModel = context.watch<SalaPesiViewModel>();
+    final items = salaPesiViewModel.prenotazioni;
+    //print("items: ");
+    print(items);
 
-  return Scaffold(
-    appBar: AppBar(
-    ),
-    body: Stack(
-      children: [
-        ListView.builder(
-          padding: const EdgeInsets.all(12),
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final item = items[index];
-            return Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              elevation: 4,
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              child: ListTile(
-                leading: const Icon(
-                  Icons.perm_contact_calendar,
-                  size: 32,
-                  color: Colors.deepPurple,
+    return ListView.builder(
+      padding: EdgeInsets.all(12),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+        return Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 4,
+          margin: EdgeInsets.symmetric(vertical: 8),
+          child: ListTile(
+            leading: Icon(
+              Icons.perm_contact_calendar,
+              size: 32,
+              color: Colors.deepPurple,
+            ),
+            title: Text(
+              item.userId,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(item.dataOra.toString()),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey,
+            ),
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
-                title: Text(
-                  item.userId,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(item.dataOra.toString()),
-                trailing: const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Colors.grey,
-                ),
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(20)),
-                    ),
-                    builder: (context) => Container(
-                      padding: const EdgeInsets.all(16),
+                builder:
+                    (context) => Container(
+                      padding: EdgeInsets.all(16),
                       height: 250,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             item.userId,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Text(
                             item.dataOra.toString(),
                             style: TextStyle(
@@ -75,37 +72,27 @@ Widget build(BuildContext context) {
                               color: Colors.grey[700],
                             ),
                           ),
-                          const Spacer(),
+                          Spacer(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               ElevatedButton(
                                 onPressed: () => Navigator.pop(context),
+                                child: const Text('Chiudi'),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                 ),
-                                child: const Text('Chiudi'),
                               ),
                             ],
                           ),
                         ],
                       ),
                     ),
-                  );
-                },
-              ),
-            );
-          },
-        ),
-      ],
-    ),
-    floatingActionButton: FloatingActionButton(
-      backgroundColor: const Color(0xFF1E88E5),
-      onPressed: () {
-        print("FAB premuto!");
+              );
+            },
+          ),
+        );
       },
-      child: const Icon(Icons.add, color: Colors.white),
-    ),
-  );
-}
+    );
+  }
 }

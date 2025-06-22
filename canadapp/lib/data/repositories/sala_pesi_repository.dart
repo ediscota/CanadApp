@@ -6,9 +6,9 @@ class SalaPesiRepository {
 
   SalaPesiRepository(this._salaPesiService);
 
-  Future<List<Prenotazione>> fetchPrenotazioniUtente() {
+  Future<List<Prenotazione>> fetchPrenotazioni() {
     //print("Metodo");
-    final prenotazioni = _salaPesiService.fetchPrenotazioniUtente();
+    final prenotazioni = _salaPesiService.fetchPrenotazioni();
     print(prenotazioni);
     return prenotazioni;
   }
