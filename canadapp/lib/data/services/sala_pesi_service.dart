@@ -17,14 +17,7 @@ class SalaPesiService {
     }
 
     // Query filtrata per userId
-    final querySnapshot = await _firestore
-        .collection('prenotazioni')
-        .where('userId', isEqualTo: userId)
-        .get();
-
-    // Log per debug
-    print("Prenotazioni trovate per utente $userId: ${querySnapshot.docs.length}");
-
+    final querySnapshot = await _firestore.collection('prenotazioni').where('userId', isEqualTo: userId).get();
     return querySnapshot.docs.map((doc) {
       final data = doc.data();
       data['id'] = doc.id;
@@ -35,6 +28,14 @@ class SalaPesiService {
     rethrow;
   }
  } 
+ Future<void> aggiungiPrenotazione(DateTime dataOra) async {
+  final prefs = await SharedPreferences.getInstance();
+  final userId = prefs.getString('userId');
+  await FirebaseFirestore.instance.collection('prenotazioni').add({
+    'userId': userId,
+    'dataOra': Timestamp.fromDate(dataOra),
+  });
+}
 }
 
-// fai anche la post
+

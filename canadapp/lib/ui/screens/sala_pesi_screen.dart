@@ -14,85 +14,95 @@ class _SalaPesiScreenState extends State<SalaPesiScreen> {
   Widget build(BuildContext context) {
     final salaPesiViewModel = context.watch<SalaPesiViewModel>();
     final items = salaPesiViewModel.prenotazioni;
-    //print("items: ");
-    print(items);
 
-    return ListView.builder(
-      padding: EdgeInsets.all(12),
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        final item = items[index];
-        return Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 4,
-          margin: EdgeInsets.symmetric(vertical: 8),
-          child: ListTile(
-            leading: Icon(
-              Icons.perm_contact_calendar,
-              size: 32,
-              color: Colors.deepPurple,
+    return Scaffold(
+      body: ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final item = items[index];
+          return Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
             ),
-            title: Text(
-              item.userId,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(item.dataOra.toString()),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey,
-            ),
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                builder:
-                    (context) => Container(
-                      padding: EdgeInsets.all(16),
-                      height: 250,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.userId,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: ListTile(
+              leading: const Icon(
+                Icons.perm_contact_calendar,
+                size: 32,
+                color: Color(0xFF1E88E5),
+              ),
+              title: Text(
+                item.userId,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(item.dataOra.toString()),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.grey,
+              ),
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  builder: (context) => Container(
+                    padding: const EdgeInsets.all(16),
+                    height: 250,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.userId,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
-                          SizedBox(height: 8),
-                          Text(
-                            item.dataOra.toString(),
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[700],
-                            ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          item.dataOra.toString(),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[700],
                           ),
-                          Spacer(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Chiudi'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                ),
+                        ),
+                        const Spacer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Chiudi'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-              );
-            },
-          ),
-        );
-      },
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Qui metti la logica per creare una nuova prenotazione
+          // Per esempio: Navigator.push(context, MaterialPageRoute(builder: (_) => NuovaPrenotazioneScreen()));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Azione per aggiungere prenotazione')),
+          );
+        },
+        backgroundColor: const Color(0xFF1E88E5),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
     );
   }
 }

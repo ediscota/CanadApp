@@ -9,7 +9,10 @@ class SalaPesiRepository {
   Future<List<Prenotazione>> fetchPrenotazioni() {
     //print("Metodo");
     final prenotazioni = _salaPesiService.fetchPrenotazioni();
-    print(prenotazioni);
     return prenotazioni;
+  }
+  
+  Future<void> aggiungiPrenotazione(DateTime dataOra) {
+    return _salaPesiService.aggiungiPrenotazione(dataOra);
   }
 }
