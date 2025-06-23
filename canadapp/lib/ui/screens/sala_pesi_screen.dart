@@ -1,3 +1,4 @@
+import 'package:canadapp/ui/screens/calendar_bottom_sheet.dart';
 import 'package:canadapp/ui/viewmodels/sala_pesi_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -94,11 +95,7 @@ class _SalaPesiScreenState extends State<SalaPesiScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Qui metti la logica per creare una nuova prenotazione
-          // Per esempio: Navigator.push(context, MaterialPageRoute(builder: (_) => NuovaPrenotazioneScreen()));
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Azione per aggiungere prenotazione')),
-          );
+          showCalendarBottomSheet(context);
         },
         backgroundColor: const Color(0xFF1E88E5),
         child: const Icon(Icons.add, color: Colors.white),
