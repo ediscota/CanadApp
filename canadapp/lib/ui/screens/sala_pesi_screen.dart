@@ -1,4 +1,4 @@
-import 'package:canadapp/ui/screens/calendar_bottom_sheet.dart';
+import 'package:canadapp/ui/core/calendar_bottom_sheet.dart';
 import 'package:canadapp/ui/viewmodels/sala_pesi_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +47,9 @@ class _SalaPesiScreenState extends State<SalaPesiScreen> {
                 showModalBottomSheet(
                   context: context,
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                   ),
                   builder: (context) => Container(
                     padding: const EdgeInsets.all(16),

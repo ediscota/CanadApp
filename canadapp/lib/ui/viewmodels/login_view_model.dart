@@ -35,6 +35,7 @@ class LoginViewModel extends ChangeNotifier {
           await prefs.setString('email', email);
           await prefs.setString('password', password);
           await prefs.setString('userId', _utente!.id);
+          await prefs.setBool('isStudy', _utente!.isStudy);
           print('Utente salvato: ${_utente!.id}');
         });
         return true;

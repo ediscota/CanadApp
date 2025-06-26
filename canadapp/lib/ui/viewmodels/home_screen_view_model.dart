@@ -17,6 +17,7 @@ class HomeScreenViewModel extends ChangeNotifier {
     await prefs.remove('email');
     await prefs.remove('password');
     await prefs.remove('userId');
+    await prefs.remove('isStudy');
 
     Navigator.of(
       context,

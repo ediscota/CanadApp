@@ -5,6 +5,7 @@ import 'package:canadapp/ui/viewmodels/home_screen_view_model.dart';
 import 'package:canadapp/ui/viewmodels/sala_pesi_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:canadapp/data/repositories/gestione_certificato_repository.dart';
 import 'package:canadapp/data/services/gestione_certificato_service.dart';
@@ -20,7 +21,11 @@ import 'ui/viewmodels/aula_studio_view_model.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const CanadApp());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((
+    _,
+  ) {
+    runApp(CanadApp());
+  });
 }
 
 class CanadApp extends StatelessWidget {
@@ -56,12 +61,19 @@ class CanadApp extends StatelessWidget {
           create: (_) => LoginViewModel(UserRepository(UserService())),
           update: (_, repo, __) => LoginViewModel(repo),
         ),
-        ChangeNotifierProxyProvider<AulaStudioRepository, AulaStudioViewModel>(
+        ChangeNotifierProxyProvider2<
+          AulaStudioRepository,
+          UserRepository,
+          AulaStudioViewModel
+        >(
           create:
               (_) => AulaStudioViewModel(
                 AulaStudioRepository(AulaStudioService()),
+                UserRepository(UserService()),
               ),
-          update: (_, repo, __) => AulaStudioViewModel(repo),
+          update:
+              (_, aulaRepo, userRepo, __) =>
+                  AulaStudioViewModel(aulaRepo, userRepo),
         ),
         ChangeNotifierProxyProvider(
           create: (_) => HomeScreenViewModel(),
