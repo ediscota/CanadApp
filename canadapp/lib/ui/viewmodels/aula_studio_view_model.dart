@@ -1,14 +1,16 @@
+import 'package:canadapp/data/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/repositories/aula_studio_repository.dart';
 import '../../domain/models/aula_studio.dart';
 
 class AulaStudioViewModel extends ChangeNotifier {
   final AulaStudioRepository _repository;
+  final UserRepository _userRepository;
   AulaStudio? _stato;
   AulaStudio? get stato => _stato;
-  bool qrState = true; // true = decrementa, false = incrementa
 
-  AulaStudioViewModel(this._repository) {
+  AulaStudioViewModel(this._repository, this._userRepository) {
     _ascoltaDisponibilita();
   }
 
@@ -17,15 +19,22 @@ class AulaStudioViewModel extends ChangeNotifier {
       _stato = dati;
       notifyListeners();
     });
-  
   }
-   Future<void> handleQrCodeScanned(String code) async {
+
+  Future<void> handleQrCodeScanned(String code) async {
+    final instance = await SharedPreferences.getInstance();
+    bool qrState = instance.getBool('qrState') ?? false;
+    String userId = instance.getString('userId') ?? '';
+    print(code + ' ' + qrState.toString() + ' ' + userId);
     if (qrState) {
-      await _repository.decrementaDisponibilita();
-    } else {
       await _repository.incrementaDisponibilita();
+    } else {
+      await _repository.decrementaDisponibilita();
     }
     // cambia stato per prossimo scan
     qrState = !qrState;
+
+    await _userRepository.setStudy(userId, qrState);
+    instance.setBool('qrState', qrState);
   }
 }

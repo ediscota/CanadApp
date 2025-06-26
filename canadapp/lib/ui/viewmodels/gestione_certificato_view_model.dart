@@ -1,49 +1,80 @@
 import 'dart:io';
+import 'package:canadapp/data/repositories/gestione_certificato_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GestioneCertificatoViewModel extends ChangeNotifier {
-  DateTime? _dataScadenza;
-  File? _certificato;
+  final GestioneCertificatoRepository _repository;
 
-  // Getters
-  DateTime? get dataScadenza => _dataScadenza;
-  File? get certificato => _certificato;
-
-  // Setters
-  void setDataScadenza(DateTime data) {
-    _dataScadenza = data;
-    notifyListeners();
+  GestioneCertificatoViewModel(this._repository) {
+    _loadCertificatoDati();
   }
 
-  void caricaCertificato(File file) {
-    _certificato = file;
-    notifyListeners();
-  }
+  String? certificatoUrl;
+  DateTime? dataScadenza;
+  File? fileSelezionato;
+  bool isLoading = true;
 
-  bool get certificatoValido {
-    if (_dataScadenza == null) return false;
-    return _dataScadenza!.isAfter(DateTime.now());
-  }
-
-  void resettaCertificato() {
-    _dataScadenza = null;
-    _certificato = null;
-    notifyListeners();
-  }
-
-// TODO: cosi non va bene, il try {await FirebaseFirestore.instance.collection('users').doc(userId).update lo fai in un metodo in userservice,
-// poi lo wrappi in un metodo in userrepository, e infine questo metodo chiama il metodo in unserrepository
-  Future<void> salvaSuFirestore(String userId) async {
-    if (_dataScadenza == null) return;
-
-    try {
-      await FirebaseFirestore.instance.collection('users').doc(userId).update({
-        'dataScadenza': Timestamp.fromDate(_dataScadenza!),
-      });
-    } catch (e) {
-      debugPrint('Errore durante il salvataggio: $e');
-      rethrow;
+  Future<void> _loadCertificatoDati() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+    if (userId != null) {
+      final data = await _repository.fetchCertificate(userId);
+      certificatoUrl = data['url'];
+      dataScadenza = data['dataScadenza'];
     }
+    isLoading = false;
+    notifyListeners();
+  }
+
+  void setFile(File file) {
+    fileSelezionato = file;
+    notifyListeners();
+  }
+
+  void setDataScadenza(DateTime date) {
+    dataScadenza = date;
+    notifyListeners();
+  }
+
+  Future<void> uploadCertificate() async {
+    if (fileSelezionato == null || dataScadenza == null) return;
+
+    isLoading = true;
+    notifyListeners();
+
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+    if (userId != null) {
+      final url = await _repository.uploadCertificate(
+        userId,
+        fileSelezionato!,
+        dataScadenza!,
+      );
+      certificatoUrl = url;
+    }
+
+    fileSelezionato = null;
+    isLoading = false;
+    notifyListeners();
+  }
+
+  String get dataScadenzaString =>
+      dataScadenza != null
+          ? '${dataScadenza!.day}/${dataScadenza!.month}/${dataScadenza!.year}'
+          : '';
+
+  Future<void> deleteCertificate() async {
+    isLoading = true;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+    if (userId != null) {
+      await _repository.deleteCertificate(userId);
+      certificatoUrl = null;
+      dataScadenza = null;
+    }
+    isLoading = false;
+    notifyListeners();
   }
 }

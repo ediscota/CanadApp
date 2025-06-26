@@ -36,6 +36,7 @@ class AulaStudioScreen extends StatelessWidget {
                     builder: (_) => QrScannerScreen(onCodeScanned: (code) {}),
                   ),
                 );
+                print(scannedCode);
                 if (scannedCode != null) {
                   // Passa al ViewModel per aggiornare la disponibilità
                   aulaStudioViewModel.handleQrCodeScanned(scannedCode);

@@ -3,12 +3,14 @@ class User {
   final String email;
   final String password;
   final bool certificatoMedico;
+  final bool isStudy;
 
   User({
     required this.id,
     required this.email,
     required this.password,
     required this.certificatoMedico,
+    required this.isStudy,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -16,7 +18,8 @@ class User {
       id: json['id'],
       email: json['email'],
       password: json['password'],
-      certificatoMedico: json['certificatoMedico']
+      certificatoMedico: json['certificatoMedico'],
+      isStudy: json['isStudy'],
     );
   }
 
@@ -26,6 +29,7 @@ class User {
       'email': email,
       'password': password,
       'certificatoMedico': certificatoMedico,
+      'isStudy': isStudy,
     };
   }
 }
