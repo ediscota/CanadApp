@@ -26,7 +26,7 @@ class CalendarPrenotazione extends StatefulWidget {
 
 class _CalendarPrenotazioneState extends State<CalendarPrenotazione> {
   DateTime _selectedDay = DateTime.now();
-  TimeOfDay _selectedTime = TimeOfDay(hour: 9, minute: 0); // default ora
+  TimeOfDay _selectedTime = TimeOfDay(hour: 9, minute: 0);
 
   @override
   Widget build(BuildContext context) {
@@ -71,17 +71,12 @@ class _CalendarPrenotazioneState extends State<CalendarPrenotazione> {
         SizedBox(height: 24),
         ElevatedButton(
           onPressed: () async {
-            final DateTime dataOra = DateTime(
-              _selectedDay.year,
-              _selectedDay.month,
-              _selectedDay.day,
-              _selectedTime.hour,
-              _selectedTime.minute,
-            );
+            final String data = "${_selectedDay.year.toString().padLeft(4, '0')}-${_selectedDay.month.toString().padLeft(2, '0')}-${_selectedDay.day.toString().padLeft(2, '0')}";
+            final String ora = "${_selectedTime.hour.toString().padLeft(2, '0')}:${_selectedTime.minute.toString().padLeft(2, '0')}";
 
             try {
-              await salaPesiViewModel.aggiungiPrenotazione(dataOra);
-              Navigator.pop(context); // Chiudo il calendario
+              await salaPesiViewModel.aggiungiPrenotazione(data, ora);
+              Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Prenotazione aggiunta!')),
               );

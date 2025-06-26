@@ -7,16 +7,12 @@ class SalaPesiService {
 
   Future<List<Prenotazione>> fetchPrenotazioni() async {
   try {
-    // Recupera l'ID dell'utente dalla sessione
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getString('userId');
-
     if (userId == null) {
       print("Nessun utente loggato trovato nella sessione.");
       return [];
     }
-
-    // Query filtrata per userId
     final querySnapshot = await _firestore.collection('prenotazioni').where('userId', isEqualTo: userId).get();
     return querySnapshot.docs.map((doc) {
       final data = doc.data();
@@ -28,14 +24,17 @@ class SalaPesiService {
     rethrow;
   }
  } 
- Future<void> aggiungiPrenotazione(DateTime dataOra) async {
+
+ Future<void> aggiungiPrenotazione(String data, String ora) async {
   final prefs = await SharedPreferences.getInstance();
   final userId = prefs.getString('userId');
   await FirebaseFirestore.instance.collection('prenotazioni').add({
     'userId': userId,
-    'dataOra': Timestamp.fromDate(dataOra),
+    'data': data, // formato: yyyy-MM-dd
+    'ora': ora,   // formato: HH:mm
   });
 }
+
 }
 
 

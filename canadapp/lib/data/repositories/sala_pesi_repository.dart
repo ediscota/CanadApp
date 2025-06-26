@@ -12,7 +12,7 @@ class SalaPesiRepository {
     return prenotazioni;
   }
   
-  Future<void> aggiungiPrenotazione(DateTime dataOra) {
-    return _salaPesiService.aggiungiPrenotazione(dataOra);
+  Future<void> aggiungiPrenotazione(String data, String ora) {
+    return _salaPesiService.aggiungiPrenotazione(data, ora);
   }
 }

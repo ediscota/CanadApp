@@ -2,6 +2,7 @@ import 'package:canadapp/ui/screens/calendar_bottom_sheet.dart';
 import 'package:canadapp/ui/viewmodels/sala_pesi_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class SalaPesiScreen extends StatefulWidget {
   const SalaPesiScreen({super.key});
@@ -34,11 +35,9 @@ class _SalaPesiScreenState extends State<SalaPesiScreen> {
                 size: 32,
                 color: Color(0xFF1E88E5),
               ),
-              title: Text(
-                item.userId,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+              title: Text('${item.data}   ${item.ora}', style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(item.dataOra.toString()),
+              //subtitle: Text('${item.data}  ${item.ora}'),
               trailing: const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
@@ -52,23 +51,24 @@ class _SalaPesiScreenState extends State<SalaPesiScreen> {
                   ),
                   builder: (context) => Container(
                     padding: const EdgeInsets.all(16),
-                    height: 250,
+                    height: 350, // aumento per farci stare il QR
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          item.userId,
+                          'Data: ${item.data}\nOra: ${item.ora}',
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          item.dataOra.toString(),
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[700],
+                        const SizedBox(height: 16),
+                        // GENERAZIONE QR CODE
+                        Center(
+                          child: QrImageView(
+                            data: item.id, // puoi anche passare una stringa più descrittiva se preferisci
+                            version: QrVersions.auto,
+                            size: 200.0,
                           ),
                         ),
                         const Spacer(),

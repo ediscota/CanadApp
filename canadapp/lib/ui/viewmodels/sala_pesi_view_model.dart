@@ -23,14 +23,14 @@ class SalaPesiViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> aggiungiPrenotazione(DateTime dataOra) async {
+  Future<void> aggiungiPrenotazione(String data, String ora) async {
     // Controllo se esiste già una prenotazione per quell'orario
-    bool esiste = _prenotazioni.any((prenotazione) => prenotazione.dataOra == dataOra);
+    // da rivedere bool esiste = _prenotazioni.any((prenotazione) => prenotazione.dataOra == dataOra);
 
-    if (esiste) {
-      throw Exception('Esiste già una prenotazione per questa data e ora.');
-    }
-    await _repository.aggiungiPrenotazione(dataOra);
+    //if (esiste) {
+     // throw Exception('Esiste già una prenotazione per questa data e ora.');
+   // }
+    await _repository.aggiungiPrenotazione(data, ora);
     await fetchPrenotazioni();
   }
 }
