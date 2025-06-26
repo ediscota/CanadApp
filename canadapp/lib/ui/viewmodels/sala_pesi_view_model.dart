@@ -6,6 +6,7 @@ class SalaPesiViewModel extends ChangeNotifier {
   final SalaPesiRepository _repository;
   List<Prenotazione> _prenotazioni = [];
   late  DateTime _dataSelezionata;
+  List<String> errors = [];
 
   SalaPesiViewModel(this._repository) {
     fetchPrenotazioni();
@@ -24,13 +25,13 @@ class SalaPesiViewModel extends ChangeNotifier {
   }
 
   Future<void> aggiungiPrenotazione(String data, String ora) async {
-    // Controllo se esiste già una prenotazione per quell'orario
-    // da rivedere bool esiste = _prenotazioni.any((prenotazione) => prenotazione.dataOra == dataOra);
-
-    //if (esiste) {
-     // throw Exception('Esiste già una prenotazione per questa data e ora.');
-   // }
-    await _repository.aggiungiPrenotazione(data, ora);
+    errors = await _repository.aggiungiPrenotazione(data, ora);
+    notifyListeners();
     await fetchPrenotazioni();
   }
+  void clearErrors() {
+    errors = [];
+    notifyListeners();
+  }
+
 }

@@ -4,7 +4,6 @@ import '../../domain/models/prenotazione.dart';
 
 class SalaPesiService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   Future<List<Prenotazione>> fetchPrenotazioni() async {
   try {
     final prefs = await SharedPreferences.getInstance();
@@ -25,16 +24,64 @@ class SalaPesiService {
   }
  } 
 
- Future<void> aggiungiPrenotazione(String data, String ora) async {
-  final prefs = await SharedPreferences.getInstance();
-  final userId = prefs.getString('userId');
-  await FirebaseFirestore.instance.collection('prenotazioni').add({
-    'userId': userId,
-    'data': data, // formato: yyyy-MM-dd
-    'ora': ora,   // formato: HH:mm
-  });
-}
+ Future<List<String>> aggiungiPrenotazione(String data, String ora) async {
+    List<String> errors = [];
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('prenotazioni')
+        .where('data', isEqualTo: data)
+        .where('ora', isEqualTo: ora)
+        .get();
+    // Controllo capienza massima
+    if (querySnapshot.docs.length > 1) {// TODO modificare a 7
+      errors.add('La fascia oraria selezionata è già piena.');
+    }
+    // Controllo certificazione utente
+    bool isCertificato = await isUtenteCertificato();
+    if (!isCertificato) {
+      errors.add('Utente non certificato o certificato scaduto.');
+    }
+    if (errors.isNotEmpty) {
+      return errors;
+    }
+    await FirebaseFirestore.instance.collection('prenotazioni').add({
+      'userId': userId,
+      'data': data,
+      'ora': ora,
+    });
+    return errors;
+  }
 
+ Future<bool> isUtenteCertificato() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+    final userSnapshot = await FirebaseFirestore.instance
+        .collection('utenti')
+        .doc(userId)
+        .get();
+    final dataScadenzaTimestamp = userSnapshot.data()?['dataScadenza'];
+    if (dataScadenzaTimestamp == null) {
+      return false; // certificato mai inserito
+    }
+    final DateTime dataScadenza = (dataScadenzaTimestamp as Timestamp).toDate();
+    final DateTime oggi = DateTime.now();
+    if (dataScadenza.isBefore(oggi) || dataScadenza.isAtSameMomentAs(oggi)) {
+      return true; // certificato valido
+    } else {
+      return false; // certificato scaduto
+    }
+  }
+
+ //TODO da levare, insieme al repo
+ Future<bool> isOrarioDisponibile(String data, String ora) async {
+  final snapshot = await FirebaseFirestore.instance
+      .collection('prenotazioni')
+      .where('data', isEqualTo: data)
+      .where('ora', isEqualTo: ora)
+      .get();
+  return snapshot.docs.length < 7;
+}
 }
 
 

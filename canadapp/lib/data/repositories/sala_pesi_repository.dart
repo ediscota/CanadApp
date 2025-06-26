@@ -3,6 +3,7 @@ import 'package:canadapp/domain/models/prenotazione.dart';
 
 class SalaPesiRepository {
   final SalaPesiService _salaPesiService;
+  //List<String> errors = [];
 
   SalaPesiRepository(this._salaPesiService);
 
@@ -12,7 +13,11 @@ class SalaPesiRepository {
     return prenotazioni;
   }
   
-  Future<void> aggiungiPrenotazione(String data, String ora) {
+  Future<List<String>> aggiungiPrenotazione(String data, String ora) async {
     return _salaPesiService.aggiungiPrenotazione(data, ora);
+  }
+
+  Future<bool> isOrarioDisponibile(String data, String ora) {
+    return _salaPesiService.isOrarioDisponibile(data, ora);
   }
 }
