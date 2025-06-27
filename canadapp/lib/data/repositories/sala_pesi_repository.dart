@@ -20,4 +20,9 @@ class SalaPesiRepository {
   Future<bool> isOrarioDisponibile(String data, String ora) {
     return _salaPesiService.isOrarioDisponibile(data, ora);
   }
+
+  Future<void> deletePrenotazione(String id) {
+    return _salaPesiService.deletePrenotazione(id);
+  }
+  
 }

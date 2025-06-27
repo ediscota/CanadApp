@@ -2,14 +2,14 @@ class User {
   final String id;
   final String email;
   final String password;
-  final bool certificatoMedico;
+  final String scadenzaCertificato;
   final bool isStudy;
 
   User({
     required this.id,
     required this.email,
     required this.password,
-    required this.certificatoMedico,
+    required this.scadenzaCertificato,
     required this.isStudy,
   });
 
@@ -18,7 +18,7 @@ class User {
       id: json['id'],
       email: json['email'],
       password: json['password'],
-      certificatoMedico: json['certificatoMedico'],
+      scadenzaCertificato: json['scadenzaCertificato'],
       isStudy: json['isStudy'],
     );
   }
@@ -28,7 +28,7 @@ class User {
       'id': id,
       'email': email,
       'password': password,
-      'certificatoMedico': certificatoMedico,
+      'scadenzaCertificato': scadenzaCertificato,
       'isStudy': isStudy,
     };
   }

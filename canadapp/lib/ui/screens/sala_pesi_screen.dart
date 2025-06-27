@@ -109,41 +109,57 @@ class _SalaPesiScreenState extends State<SalaPesiScreen> {
                               top: Radius.circular(20),
                             ),
                           ),
-                          builder: (context) => Container(
-                            padding: const EdgeInsets.all(16),
-                            height: 350,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Data: ${item.data}\nOra: ${item.ora}',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                Center(
-                                  child: QrImageView(
-                                    data: item.id,
-                                    version: QrVersions.auto,
-                                    size: 200.0,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text('Chiudi'),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                      ),
+                          builder: (context) => SingleChildScrollView( 
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min, 
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Data: ${item.data}\nOra: ${item.ora}',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ],
-                                ),
-                              ],
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Center(
+                                    child: QrImageView(
+                                      data: item.id,
+                                      version: QrVersions.auto,
+                                      size: 200.0,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('Chiudi'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          foregroundColor: Colors.black,
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          await salaPesiViewModel.eliminaPrenotazione(item.id);
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Elimina'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8), // Piccolo margine per sicurezza
+                                ],
+                              ),
                             ),
                           ),
                         );

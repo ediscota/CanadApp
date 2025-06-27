@@ -82,6 +82,17 @@ class SalaPesiService {
       .get();
   return snapshot.docs.length < 7;
 }
+
+Future<void> deletePrenotazione(String id) async {
+  try {
+    await _firestore.collection('prenotazioni').doc(id).delete();
+  } catch (e) {
+    // Puoi aggiungere log o gestione dell'errore se vuoi
+    throw Exception('Errore durante l\'eliminazione della prenotazione: $e');
+  }
+}
+
+
 }
 
 
