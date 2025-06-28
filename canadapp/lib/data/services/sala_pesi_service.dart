@@ -54,24 +54,29 @@ class SalaPesiService {
   }
 
  Future<bool> isUtenteCertificato() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getString('userId');
-    final userSnapshot = await FirebaseFirestore.instance
-        .collection('utenti')
-        .doc(userId)
-        .get();
-    final dataScadenzaTimestamp = userSnapshot.data()?['dataScadenza'];
-    if (dataScadenzaTimestamp == null) {
-      return false; // certificato mai inserito
-    }
-    final DateTime dataScadenza = (dataScadenzaTimestamp as Timestamp).toDate();
-    final DateTime oggi = DateTime.now();
-    if (dataScadenza.isBefore(oggi) || dataScadenza.isAtSameMomentAs(oggi)) {
-      return true; // certificato valido
-    } else {
-      return false; // certificato scaduto
-    }
+  final prefs = await SharedPreferences.getInstance();
+  final userId = prefs.getString('userId');
+  final userSnapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .get();
+
+  final scadenzaCertificatoString = userSnapshot.data()?['scadenzaCertificato'];
+  if (scadenzaCertificatoString == null) {
+    return false; // certificato mai inserito
   }
+  try {
+    final DateTime dataScadenza = DateTime.parse(scadenzaCertificatoString);
+    final DateTime oggi = DateTime.now();
+    if (dataScadenza.isBefore(oggi)) {
+      return false; // certificato scaduto
+    } else {
+      return true; // certificato valido
+    }
+  } catch (e) {
+    return false; // Errore di parsing, trattalo come non valido
+  }
+}
 
  //TODO da levare, insieme al repo
  Future<bool> isOrarioDisponibile(String data, String ora) async {
