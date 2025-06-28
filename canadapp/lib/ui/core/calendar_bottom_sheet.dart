@@ -77,9 +77,6 @@ class _CalendarPrenotazioneState extends State<CalendarPrenotazione> {
             try {
               await salaPesiViewModel.aggiungiPrenotazione(data, ora);
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Prenotazione aggiunta!')),
-              );
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(e.toString())),
