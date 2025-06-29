@@ -13,13 +13,9 @@ class GestioneCertificatoRepository {
   Future<String> uploadCertificate(
     String userId,
     File file,
-    DateTime dataScadenza,
+    String dataScadenza,
   ) async {
     final url = await _service.uploadFile(userId, file, dataScadenza);
     return url;
-  }
-
-  Future<void> deleteCertificate(String userId) async {
-    await _service.deleteCertificate(userId);
   }
 }

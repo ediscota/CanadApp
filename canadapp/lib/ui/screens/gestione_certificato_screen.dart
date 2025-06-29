@@ -33,12 +33,11 @@ class _GestioneCertificatoScreenState extends State<GestioneCertificatoScreen> {
           'CanadApp',
           style: TextStyle(
             color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
           ),
         ),
         centerTitle: true,
-        elevation: 1,
       ),
       body:
           viewModel.isLoading
@@ -87,17 +86,50 @@ class _GestioneCertificatoScreenState extends State<GestioneCertificatoScreen> {
                               const SizedBox(height: 24),
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red[600],
+                                  backgroundColor: Colors.green[600],
                                 ),
                                 icon: const Icon(
-                                  Icons.delete,
+                                  Icons.update,
                                   color: Colors.white,
                                 ),
                                 label: const Text(
-                                  'Elimina Certificato',
+                                  'Aggiorna Certificato',
                                   style: TextStyle(color: Colors.white),
                                 ),
-                                onPressed: viewModel.deleteCertificate,
+                                onPressed: () async {
+                                  final result = await FilePicker.platform
+                                      .pickFiles(
+                                        type: FileType.custom,
+                                        allowedExtensions: [
+                                          'pdf',
+                                          'jpg',
+                                          'jpeg',
+                                          'png',
+                                        ],
+                                      );
+                                  if (result != null) {
+                                    viewModel.setFile(
+                                      File(result.files.single.path!),
+                                    );
+                                  }
+
+                                  final picked = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime.now().add(
+                                      const Duration(days: 365 * 5),
+                                    ),
+                                    helpText: 'Seleziona la data di scadenza',
+                                  );
+                                  if (picked != null) {
+                                    String date =
+                                        '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}'; //formato yyyy-MM-dd
+                                    viewModel.setDataScadenza(date);
+                                    _dateController.text = date;
+                                  }
+                                  await viewModel.uploadCertificate();
+                                },
                               ),
                             ],
                           ),
@@ -156,9 +188,10 @@ class _GestioneCertificatoScreenState extends State<GestioneCertificatoScreen> {
                                   ),
                                 );
                                 if (picked != null) {
-                                  viewModel.setDataScadenza(picked);
-                                  _dateController.text =
-                                      '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}';
+                                  String date =
+                                      '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}'; //formato yyyy-MM-dd
+                                  viewModel.setDataScadenza(date);
+                                  _dateController.text = date;
                                 }
                               },
                             ),

@@ -12,13 +12,13 @@ class GestioneCertificatoService {
       final data = doc.data();
       if (data == null ||
           data['certificatoUrl'] == null ||
-          data['dataScadenza'] == null) {
+          data['scadenzaCertificato'] == null) {
         return {'url': null, 'dataScadenza': null};
       }
 
       return {
         'url': data['certificatoUrl'],
-        'dataScadenza': (data['dataScadenza'] as Timestamp).toDate(),
+        'dataScadenza': data['scadenzaCertificato'],
       };
     } catch (e) {
       print('Errore durante il recupero dei dati del certificato: $e');
@@ -29,7 +29,7 @@ class GestioneCertificatoService {
   Future<String> uploadFile(
     String userId,
     File file,
-    DateTime dataScadenza,
+    String dataScadenza,
   ) async {
     try {
       final ref = _storage.ref().child('certificati/$userId');
@@ -37,29 +37,11 @@ class GestioneCertificatoService {
       String url = await ref.getDownloadURL();
       await _firestore.collection('users').doc(userId).update({
         'certificatoUrl': url,
-        'dataScadenza': Timestamp.fromDate(dataScadenza),
+        'scadenzaCertificato': dataScadenza,
       });
       return url;
     } catch (e) {
       print('Errore durante il caricamento del file: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> deleteCertificate(String userId) async {
-    try {
-      final doc = await _firestore.collection('users').doc(userId).get();
-      final data = doc.data();
-      if (data != null && data['certificatoUrl'] != null) {
-        final ref = _storage.refFromURL(data['certificatoUrl']);
-        await ref.delete();
-      }
-      await _firestore.collection('users').doc(userId).update({
-        'certificatoUrl': FieldValue.delete(),
-        'dataScadenza': FieldValue.delete(),
-      });
-    } catch (e) {
-      print('Errore durante l\'eliminazione del certificato: $e');
       rethrow;
     }
   }

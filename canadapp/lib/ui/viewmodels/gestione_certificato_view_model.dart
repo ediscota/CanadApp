@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:canadapp/data/repositories/gestione_certificato_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:canadapp/data/repositories/notifiche_repository.dart';
 
 class GestioneCertificatoViewModel extends ChangeNotifier {
   final GestioneCertificatoRepository _repository;
@@ -11,7 +12,7 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
   }
 
   String? certificatoUrl;
-  DateTime? dataScadenza;
+  String? dataScadenza;
   File? fileSelezionato;
   bool isLoading = true;
 
@@ -32,7 +33,7 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setDataScadenza(DateTime date) {
+  void setDataScadenza(String date) {
     dataScadenza = date;
     notifyListeners();
   }
@@ -53,28 +54,11 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
       );
       certificatoUrl = url;
     }
-
+    await NotificheRepository.scheduleNotification(dataScadenza!);
     fileSelezionato = null;
     isLoading = false;
     notifyListeners();
   }
 
-  String get dataScadenzaString =>
-      dataScadenza != null
-          ? '${dataScadenza!.day}/${dataScadenza!.month}/${dataScadenza!.year}'
-          : '';
-
-  Future<void> deleteCertificate() async {
-    isLoading = true;
-    notifyListeners();
-    final prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getString('userId');
-    if (userId != null) {
-      await _repository.deleteCertificate(userId);
-      certificatoUrl = null;
-      dataScadenza = null;
-    }
-    isLoading = false;
-    notifyListeners();
-  }
+  String get dataScadenzaString => dataScadenza ?? '';
 }
