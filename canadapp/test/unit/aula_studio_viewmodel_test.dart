@@ -3,6 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:canadapp/ui/viewmodels/aula_studio_view_model.dart';
 import '../mock/aula_studio_repository_mock.dart';
+import '../mock/user_repository_mock.dart';
 
 void main() {
   late MockAulaStudioRepository mockAulaStudioRepository;
