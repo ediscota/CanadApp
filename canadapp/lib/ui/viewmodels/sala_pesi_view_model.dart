@@ -9,9 +9,7 @@ class SalaPesiViewModel extends ChangeNotifier {
   List<String> errors = [];
   bool _isLoading = false;
 
-  SalaPesiViewModel(this._repository) {
-    fetchPrenotazioni();
-  }
+  SalaPesiViewModel(this._repository);
 
   List<Prenotazione> get prenotazioni => _prenotazioni;
   bool get isLoading => _isLoading;

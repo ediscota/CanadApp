@@ -13,8 +13,18 @@ class SalaPesiScreen extends StatefulWidget {
   State<SalaPesiScreen> createState() => _SalaPesiScreenState();
 }
 
+
+
 class _SalaPesiScreenState extends State<SalaPesiScreen> {
   Timer? _errorTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SalaPesiViewModel>().fetchPrenotazioni();
+    });
+}
 
   @override
   void dispose() {
