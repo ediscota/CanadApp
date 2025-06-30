@@ -1,6 +1,7 @@
 import 'package:canadapp/data/repositories/sala_pesi_repository.dart';
 import 'package:canadapp/domain/models/prenotazione.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SalaPesiViewModel extends ChangeNotifier {
   final SalaPesiRepository _repository;
@@ -8,6 +9,7 @@ class SalaPesiViewModel extends ChangeNotifier {
   late DateTime _dataSelezionata;
   List<String> errors = [];
   bool _isLoading = false;
+  String userId = '';
 
   SalaPesiViewModel(this._repository);
 
@@ -16,7 +18,13 @@ class SalaPesiViewModel extends ChangeNotifier {
 
   Future<void> fetchPrenotazioni() async {
     _prenotazioni = await _repository.fetchPrenotazioni();
+    final instance = await SharedPreferences.getInstance();
+    userId = instance.getString('userId') ?? '';
     notifyListeners();
+  }
+
+  List<Prenotazione> userPrenotazioni() {
+    return _prenotazioni.where((p) => p.userId == userId).toList();
   }
 
   void setDataSelezionata(DateTime data) {
@@ -49,5 +57,12 @@ class SalaPesiViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<bool> isCertificatoValid() async {
+    final instance = await SharedPreferences.getInstance();
+    final scadenza = instance.getString('scadenzaCertificato');
+    final now = DateTime.now().toString().substring(0, 10);
+    return scadenza != null && now.compareTo(scadenza) < 0;
   }
 }

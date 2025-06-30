@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:canadapp/domain/models/prenotazione.dart';
 import 'package:canadapp/ui/core/calendar_bottom_sheet.dart';
 import 'package:canadapp/ui/viewmodels/sala_pesi_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SalaPesiScreen extends StatefulWidget {
   const SalaPesiScreen({super.key});
@@ -17,6 +19,13 @@ class SalaPesiScreen extends StatefulWidget {
 
 class _SalaPesiScreenState extends State<SalaPesiScreen> {
   Timer? _errorTimer;
+
+  Future<bool> isCertificatoValid() async {
+    final salaPesiViewModel = context.read<SalaPesiViewModel>();
+    final res = await salaPesiViewModel.isCertificatoValid();
+    print(res);
+    return res;
+  }
 
   @override
   void initState() {
@@ -42,7 +51,7 @@ class _SalaPesiScreenState extends State<SalaPesiScreen> {
   @override
   Widget build(BuildContext context) {
     final salaPesiViewModel = context.watch<SalaPesiViewModel>();
-    final items = salaPesiViewModel.prenotazioni;
+    List<Prenotazione> items = salaPesiViewModel.userPrenotazioni();
     final errors = salaPesiViewModel.errors;
 
     // Se ci sono errori, fai partire il timer per nasconderli dopo 3 secondi
@@ -224,12 +233,21 @@ class _SalaPesiScreenState extends State<SalaPesiScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showCalendarBottomSheet(context);
+      floatingActionButton: FutureBuilder(
+        future: isCertificatoValid(),
+        builder: (context, snapshot) {
+          if (snapshot.data == true) {
+            return FloatingActionButton(
+              onPressed: () {
+                showCalendarBottomSheet(context);
+              },
+              backgroundColor: const Color(0xFF1E88E5),
+              child: const Icon(Icons.add, color: Colors.white),
+            );
+          } else {
+            return SizedBox.shrink();
+          }
         },
-        backgroundColor: const Color(0xFF1E88E5),
-        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

@@ -36,6 +36,10 @@ class LoginViewModel extends ChangeNotifier {
           await prefs.setString('password', password);
           await prefs.setString('userId', _utente!.id);
           await prefs.setBool('isStudy', _utente!.isStudy);
+          await prefs.setString(
+            'scadenzaCertificato',
+            _utente!.scadenzaCertificato,
+          );
           print('Utente salvato: ${_utente!.id}');
         });
         return true;
