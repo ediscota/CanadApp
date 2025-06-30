@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:canadapp/data/repositories/gestione_certificato_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:canadapp/data/repositories/notifiche_repository.dart';
 
 class GestioneCertificatoViewModel extends ChangeNotifier {
   final GestioneCertificatoRepository _repository;
@@ -11,7 +10,7 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
     _loadCertificatoDati();
   }
 
-  String? certificatoUrl;
+  //String? certificatoUrl;
   String? dataScadenza;
   File? fileSelezionato;
   bool isLoading = true;
@@ -21,7 +20,7 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
     final userId = prefs.getString('userId');
     if (userId != null) {
       final data = await _repository.fetchCertificate(userId);
-      certificatoUrl = data['url'];
+      //certificatoUrl = data['url'];
       dataScadenza = data['dataScadenza'];
     }
     isLoading = false;
@@ -47,18 +46,26 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getString('userId');
     if (userId != null) {
-      final url = await _repository.uploadCertificate(
+      await _repository.uploadCertificate(
         userId,
         fileSelezionato!,
         dataScadenza!,
       );
-      certificatoUrl = url;
+      //certificatoUrl = url;
     }
-    await NotificheRepository.scheduleNotification(dataScadenza!);
     fileSelezionato = null;
     isLoading = false;
     notifyListeners();
   }
 
   String get dataScadenzaString => dataScadenza ?? '';
+
+  Future<String> getCertificatoUrl() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+    if (userId != null) {
+      return await _repository.getCertificatoUrl(userId);
+    }
+    return '';
+  }
 }

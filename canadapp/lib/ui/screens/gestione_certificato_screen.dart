@@ -45,7 +45,9 @@ class _GestioneCertificatoScreenState extends State<GestioneCertificatoScreen> {
               : Padding(
                 padding: const EdgeInsets.all(20),
                 child:
-                    viewModel.certificatoUrl != null
+                    DateTime.parse(
+                          viewModel.dataScadenza!,
+                        ).isAfter(DateTime.now())
                         ? Center(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -54,7 +56,11 @@ class _GestioneCertificatoScreenState extends State<GestioneCertificatoScreen> {
                                 onTap: () async {
                                   try {
                                     await launchUrl(
-                                      Uri.parse(viewModel.certificatoUrl!),
+                                      //prendere il link da storage
+                                      Uri.parse(
+                                        await viewModel.getCertificatoUrl(),
+                                      ),
+                                      //Uri.parse(viewModel.certificatoUrl!),
                                       mode: LaunchMode.externalApplication,
                                     );
                                   } catch (e) {
