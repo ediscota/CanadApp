@@ -17,10 +17,16 @@ import 'ui/viewmodels/login_view_model.dart';
 import 'data/services/aula_studio_service.dart';
 import 'data/repositories/aula_studio_repository.dart';
 import 'ui/viewmodels/aula_studio_view_model.dart';
+import 'package:canadapp/data/services/notifiche_service.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('Europe/Rome'));
+  NotificheService().initializeNotification();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((
     _,
   ) {

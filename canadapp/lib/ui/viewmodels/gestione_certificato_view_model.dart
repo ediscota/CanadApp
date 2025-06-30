@@ -10,8 +10,8 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
     _loadCertificatoDati();
   }
 
-  String? certificatoUrl;
-  DateTime? dataScadenza;
+  //String? certificatoUrl;
+  String? dataScadenza;
   File? fileSelezionato;
   bool isLoading = true;
 
@@ -20,7 +20,7 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
     final userId = prefs.getString('userId');
     if (userId != null) {
       final data = await _repository.fetchCertificate(userId);
-      certificatoUrl = data['url'];
+      //certificatoUrl = data['url'];
       dataScadenza = data['dataScadenza'];
     }
     isLoading = false;
@@ -32,7 +32,7 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setDataScadenza(DateTime date) {
+  void setDataScadenza(String date) {
     dataScadenza = date;
     notifyListeners();
   }
@@ -46,35 +46,26 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getString('userId');
     if (userId != null) {
-      final url = await _repository.uploadCertificate(
+      await _repository.uploadCertificate(
         userId,
         fileSelezionato!,
         dataScadenza!,
       );
-      certificatoUrl = url;
+      //certificatoUrl = url;
     }
-
     fileSelezionato = null;
     isLoading = false;
     notifyListeners();
   }
 
-  String get dataScadenzaString =>
-      dataScadenza != null
-          ? '${dataScadenza!.day}/${dataScadenza!.month}/${dataScadenza!.year}'
-          : '';
+  String get dataScadenzaString => dataScadenza ?? '';
 
-  Future<void> deleteCertificate() async {
-    isLoading = true;
-    notifyListeners();
+  Future<String> getCertificatoUrl() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getString('userId');
     if (userId != null) {
-      await _repository.deleteCertificate(userId);
-      certificatoUrl = null;
-      dataScadenza = null;
+      return await _repository.getCertificatoUrl(userId);
     }
-    isLoading = false;
-    notifyListeners();
+    return '';
   }
 }
