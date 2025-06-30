@@ -62,176 +62,193 @@ class _SalaPesiScreenState extends State<SalaPesiScreen> {
     }
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            // SEZIONE ERRORI
-            if (errors.isNotEmpty)
-              AnimatedOpacity(
-                opacity: errors.isNotEmpty ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 500),
-                child: Card(
-                  color: Colors.red.shade100,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: errors
-                          .map((error) => Text(
-                                error,
-                                style: const TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                ),
-              ),
-            // LISTA PRENOTAZIONI
-            Expanded(
-              child: items.isEmpty
-                  ? Center(
-                      child: Text(
-                        'Nessuna prenotazione disponibile.',
-                        style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        final item = items[index];
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+      body: FutureBuilder(
+        future: isCertificatoValid(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Errore nel controllo del certificato.'));
+          } else if (snapshot.data == true) {
+            return Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  // SEZIONE ERRORI
+                  if (errors.isNotEmpty)
+                    AnimatedOpacity(
+                      opacity: errors.isNotEmpty ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 500),
+                      child: Card(
+                        color: Colors.red.shade100,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: errors
+                                .map((error) => Text(
+                                      error,
+                                      style: const TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold),
+                                    ))
+                                .toList(),
                           ),
-                          elevation: 6,
-                          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(16),
-                            leading: CircleAvatar(
-                              radius: 30,
-                              // ignore: deprecated_member_use
-                              backgroundColor: const Color(0xFF1E88E5).withOpacity(0.2),
-                              child: const Icon(
-                                Icons.fitness_center,
-                                color: Color(0xFF1E88E5),
-                                size: 30,
-                              ),
+                        ),
+                      ),
+                    ),
+                  // LISTA PRENOTAZIONI
+                  Expanded(
+                    child: items.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Nessuna prenotazione disponibile.',
+                              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                             ),
-                            title: Text(
-                              '${item.data}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                            subtitle: Padding(
-                              padding: const EdgeInsets.only(top: 6),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.access_time, size: 16, color: Colors.grey[700]),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    item.ora,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey[800],
+                          )
+                        : ListView.builder(
+                            itemCount: items.length,
+                            itemBuilder: (context, index) {
+                              final item = items[index];
+                              return Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                elevation: 6,
+                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.all(16),
+                                  leading: CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor: const Color(0xFF1E88E5).withOpacity(0.2),
+                                    child: const Icon(
+                                      Icons.fitness_center,
+                                      color: Color(0xFF1E88E5),
+                                      size: 30,
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                            trailing: const Icon(
-                              Icons.qr_code_2,
-                              size: 30,
-                              color: Colors.grey,
-                            ),
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                                ),
-                                builder: (context) => SingleChildScrollView(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                  title: Text(
+                                    '${item.data}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.only(top: 6),
+                                    child: Row(
                                       children: [
+                                        Icon(Icons.access_time, size: 16, color: Colors.grey[700]),
+                                        const SizedBox(width: 4),
                                         Text(
-                                          'Dettaglio Prenotazione',
-                                          style: const TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
+                                          item.ora,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey[800],
                                           ),
                                         ),
-                                        const SizedBox(height: 16),
-                                        Text(
-                                          'Data: ${item.data}\nOra: ${item.ora}',
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        const SizedBox(height: 20),
-                                        QrImageView(
-                                          data: item.id,
-                                          version: QrVersions.auto,
-                                          size: 220.0,
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            ElevatedButton(
-                                              onPressed: () => Navigator.pop(context),
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.grey[300],
-                                                foregroundColor: Colors.black,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12),
-                                                ),
-                                              ),
-                                              child: const Text('Chiudi'),
-                                            ),
-                                            ElevatedButton(
-                                              onPressed: () async {
-                                                await salaPesiViewModel.eliminaPrenotazione(item.id);
-                                                Navigator.pop(context);
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.red,
-                                                foregroundColor: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12),
-                                                ),
-                                              ),
-                                              child: const Text('Elimina'),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 12),
                                       ],
                                     ),
                                   ),
+                                  trailing: const Icon(
+                                    Icons.qr_code_2,
+                                    size: 30,
+                                    color: Colors.grey,
+                                  ),
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                      ),
+                                      builder: (context) => SingleChildScrollView(
+                                        child: Container(
+                                          padding: const EdgeInsets.all(20),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Dettaglio Prenotazione',
+                                                style: TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 16),
+                                              Text(
+                                                'Data: ${item.data}\nOra: ${item.ora}',
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              const SizedBox(height: 20),
+                                              QrImageView(
+                                                data: item.id,
+                                                version: QrVersions.auto,
+                                                size: 220.0,
+                                              ),
+                                              const SizedBox(height: 20),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () => Navigator.pop(context),
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor: Colors.grey[300],
+                                                      foregroundColor: Colors.black,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(12),
+                                                      ),
+                                                    ),
+                                                    child: const Text('Chiudi'),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () async {
+                                                      await salaPesiViewModel.eliminaPrenotazione(item.id);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor: Colors.red,
+                                                      foregroundColor: Colors.white,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(12),
+                                                      ),
+                                                    ),
+                                                    child: const Text('Elimina'),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 12),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               );
                             },
                           ),
-                        );
-                      },
-                    ),
-            ),
-            const SizedBox(height: 12),
-          ],
-        ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+              ),
+            );
+          } else {
+            return Center(
+              child: Text(
+                'Certificato assente o scaduto',
+                style: TextStyle(fontSize: 20, color: Colors.red[700]),
+              ),
+            );
+          }
+        },
       ),
       floatingActionButton: FutureBuilder(
         future: isCertificatoValid(),
@@ -245,10 +262,11 @@ class _SalaPesiScreenState extends State<SalaPesiScreen> {
               child: const Icon(Icons.add, color: Colors.white),
             );
           } else {
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           }
         },
       ),
     );
+
   }
 }
