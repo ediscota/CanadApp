@@ -45,11 +45,15 @@ class _GestioneCertificatoScreenState extends State<GestioneCertificatoScreen> {
               : Padding(
                 padding: const EdgeInsets.all(20),
                 child:
-                    DateTime.parse(
-                          viewModel.dataScadenza!,
-                        ).isAfter(DateTime.now())
+                    /*viewModel.dataScadenza != null &&
+                            viewModel.dataScadenza!.isNotEmpty &&
+                            DateTime.parse(
+                              viewModel.dataScadenza!,
+                            ).isAfter(DateTime.now())*/
+                    viewModel.certificatoCaricato
                         ? Center(
                           child: Column(
+                            key: const Key('certificatoCaricatoSection'),
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               GestureDetector(
@@ -134,7 +138,9 @@ class _GestioneCertificatoScreenState extends State<GestioneCertificatoScreen> {
                                     viewModel.setDataScadenza(date);
                                     _dateController.text = date;
                                   }
-                                  await viewModel.uploadCertificate();
+                                  await viewModel.uploadCertificate(
+                                    _dateController.text,
+                                  );
                                 },
                               ),
                             ],
@@ -155,6 +161,7 @@ class _GestioneCertificatoScreenState extends State<GestioneCertificatoScreen> {
                             ),
                             const SizedBox(height: 32),
                             ElevatedButton.icon(
+                              key: const Key('selezionaFileButton'),
                               icon: const Icon(Icons.upload_file),
                               label: const Text('Seleziona file'),
                               onPressed: () async {
@@ -177,6 +184,7 @@ class _GestioneCertificatoScreenState extends State<GestioneCertificatoScreen> {
                             ),
                             const SizedBox(height: 24),
                             TextField(
+                              key: const Key('dataScadenzaTextField'),
                               controller: _dateController,
                               readOnly: true,
                               decoration: const InputDecoration(
@@ -203,9 +211,15 @@ class _GestioneCertificatoScreenState extends State<GestioneCertificatoScreen> {
                             ),
                             const SizedBox(height: 24),
                             ElevatedButton.icon(
+                              key: const Key('caricaCertificatoButton'),
                               icon: const Icon(Icons.cloud_upload),
                               label: const Text('Carica Certificato'),
-                              onPressed: viewModel.uploadCertificate,
+                              onPressed:
+                                  viewModel.isValidForm
+                                      ? () => viewModel.uploadCertificate(
+                                        _dateController.text,
+                                      )
+                                      : null,
                             ),
                           ],
                         ),

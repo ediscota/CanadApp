@@ -14,6 +14,14 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
   String? dataScadenza;
   File? fileSelezionato;
   bool isLoading = true;
+  bool certificatoCaricato = false;
+
+  bool get isValidForm {
+    print(dataScadenza);
+    return fileSelezionato != null &&
+        dataScadenza != null &&
+        dataScadenza!.isNotEmpty;
+  }
 
   Future<void> _loadCertificatoDati() async {
     final prefs = await SharedPreferences.getInstance();
@@ -21,7 +29,15 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
     if (userId != null) {
       final data = await _repository.fetchCertificate(userId);
       //certificatoUrl = data['url'];
-      dataScadenza = data['dataScadenza'];
+      if (data['dataScadenza'] != null) {
+        dataScadenza = data['dataScadenza'];
+        final parsed = DateTime.tryParse(dataScadenza!);
+        if (parsed != null && parsed.isAfter(DateTime.now())) {
+          certificatoCaricato = true;
+        }
+      }
+
+      //dataScadenza = data['dataScadenza'];
     }
     isLoading = false;
     notifyListeners();
@@ -37,7 +53,8 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> uploadCertificate() async {
+  Future<void> uploadCertificate(String date) async {
+    print(date);
     if (fileSelezionato == null || dataScadenza == null) return;
 
     isLoading = true;
@@ -51,8 +68,11 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
         fileSelezionato!,
         dataScadenza!,
       );
+      //dataScadenza = date;
+      certificatoCaricato = true;
       //certificatoUrl = url;
     }
+
     fileSelezionato = null;
     isLoading = false;
     notifyListeners();
