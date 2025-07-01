@@ -55,7 +55,7 @@ class LoginViewModel extends ChangeNotifier {
   }
 
   void loadSession(BuildContext context) async {
-    final result = await SharedPreferences.getInstance().then((prefs) async {
+      await SharedPreferences.getInstance().then((prefs) async {
       final email = prefs.getString('email');
       final password = prefs.getString('password');
 

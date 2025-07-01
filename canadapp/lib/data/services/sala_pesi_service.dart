@@ -79,7 +79,6 @@ class SalaPesiService {
     }
   }
 
-  //TODO da levare, insieme al repo
   Future<bool> isOrarioDisponibile(String data, String ora) async {
     final snapshot =
         await FirebaseFirestore.instance
@@ -94,7 +93,6 @@ class SalaPesiService {
     try {
       await _firestore.collection('prenotazioni').doc(id).delete();
     } catch (e) {
-      // Puoi aggiungere log o gestione dell'errore se vuoi
       throw Exception('Errore durante l\'eliminazione della prenotazione: $e');
     }
   }

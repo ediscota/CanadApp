@@ -1,11 +1,10 @@
 import 'package:canadapp/ui/screens/aula_studio_screen.dart';
 import 'package:canadapp/ui/screens/gestione_certificato_screen.dart';
-import 'package:canadapp/ui/screens/login_screen.dart';
 import 'package:canadapp/ui/screens/sala_pesi_screen.dart';
 import 'package:canadapp/ui/viewmodels/home_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -47,7 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               } else if (value == 'logout') {
-                // TODO: implementa la logica di logout
                 viewModel.logout(context); // ritorno al login
               }
             },
@@ -82,38 +80,6 @@ class _HomeScreenState extends State<HomeScreen> {
               label: 'SALA PESI',
             ),
           ],
-          // child: Row(
-          //   children: [
-          //     Expanded(
-          //       child: Container(
-          //         color: const Color(0xFFF5EDF7),
-          //         height: 70,
-          //         child: Column(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: const [
-          //             Icon(Icons.book),
-          //             SizedBox(height: 4),
-          //             Text('AULA STUDIO'),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //     Expanded(
-          //       child: Container(
-          //         color: const Color(0xFFEDE4F5),
-          //         height: 70,
-          //         child: Column(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: const [
-          //             Icon(Icons.fitness_center),
-          //             SizedBox(height: 4),
-          //             Text('SALA PESI'),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ),
       ),
     );

@@ -1,8 +1,7 @@
-import 'package:canadapp/ui/screens/aula_studio_screen.dart';
+
 import 'package:canadapp/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../viewmodels/login_view_model.dart';
 
 class LoginScreen extends StatefulWidget {

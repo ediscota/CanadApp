@@ -20,11 +20,6 @@ class GestioneCertificatoRepository {
     await NotificheService()
         .deleteNotificaScadenzaCertificato(); // Cancella notifica precedente se esiste
     await NotificheService().notificaScadenzaCertificato(dataScadenza);
-    /*await NotificheService().showNotification(
-      title: 'Aggiornamento Certificato',
-      body: 'Il tuo certificato è stato aggiornato.',
-    );*/
-    //return url;
   }
 
   Future<String> getCertificatoUrl(String userId) async {

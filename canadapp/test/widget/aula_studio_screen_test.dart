@@ -4,8 +4,8 @@ import 'package:canadapp/ui/viewmodels/aula_studio_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import '../mock/aula_studio_repository_mock.dart';
-import '../mock/user_repository_mock.dart';
+import '../mocks/aula_studio_repository_mock.dart';
+import '../mocks/user_repository_mock.dart';
 
 void main() {
   late MockAulaStudioRepository mockAulaStudioRepository;
@@ -49,7 +49,6 @@ void main() {
     mockAulaStudioRepository.controller.add(const AulaStudio(disponibilita: 10));
     //aggiorna stato widget
     await tester.pump();
-
     expect(find.text('Posti disponibili'), findsOneWidget);
     expect(find.text('10'), findsOneWidget);
   });

@@ -17,17 +17,7 @@ class AulaStudioService {
       return null;
     }
   }
-  /* implementazione senza freezed, deprecata
-  Future<void> setDisponibilita(int nuovaDisponibilita) async {
-    try {
-      await _firestore.doc(_docPath).set({
-        'disponibilita': nuovaDisponibilita,
-      }, SetOptions(merge: true));
-    } catch (e) {
-      print('Errore durante l\'aggiornamento della disponibilità: $e');
-    }
-  }
-  */
+
   Future<void> setDisponibilita(int nuovaDisponibilita) async {
   try {
     final nuovoStato = AulaStudio(disponibilita: nuovaDisponibilita);
@@ -64,5 +54,5 @@ class AulaStudioService {
     } catch (e) {
       print('Errore durante l\'incremento della disponibilità: $e');
     }
-  } // TODO
+  } 
 }
