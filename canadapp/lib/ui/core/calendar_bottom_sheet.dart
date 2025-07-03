@@ -31,6 +31,15 @@ class _CalendarPrenotazioneState extends State<CalendarPrenotazione> {
   bool isValidDate(DateTime day) {
     final salaPesiViewModel = context.read<SalaPesiViewModel>();
     final prenotazioni = salaPesiViewModel.prenotazioni;
+    final userId = salaPesiViewModel.userId;
+
+    final item = prenotazioni.any(
+      (test) =>
+          test.data == day.toString().substring(0, 10) && test.userId == userId,
+    );
+    if (item) {
+      return false;
+    }
     int cont = 0;
     for (var prenotazione in prenotazioni) {
       if (prenotazione.data == day.toString().substring(0, 10)) {
