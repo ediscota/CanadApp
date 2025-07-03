@@ -48,8 +48,10 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setDataScadenza(String date) {
+  void setDataScadenza(String date) async {
     dataScadenza = date;
+    final instance = await SharedPreferences.getInstance();
+    instance.setString('scadenzaCertificato', date);
     notifyListeners();
   }
 
@@ -68,7 +70,7 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
         fileSelezionato!,
         dataScadenza!,
       );
-      //dataScadenza = date;
+      setDataScadenza(date);
       certificatoCaricato = true;
       //certificatoUrl = url;
     }
@@ -79,6 +81,7 @@ class GestioneCertificatoViewModel extends ChangeNotifier {
   }
 
   String get dataScadenzaString => dataScadenza ?? '';
+  String get fileName => fileSelezionato?.path.split('/').last ?? '';
 
   Future<String> getCertificatoUrl() async {
     final prefs = await SharedPreferences.getInstance();
