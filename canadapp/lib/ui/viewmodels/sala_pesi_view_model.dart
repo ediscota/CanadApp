@@ -24,7 +24,14 @@ class SalaPesiViewModel extends ChangeNotifier {
   }
 
   List<Prenotazione> userPrenotazioni() {
-    return _prenotazioni.where((p) => p.userId == userId).toList();
+    return _prenotazioni.where((p) {
+      if (p.userId == userId &&
+          p.data.compareTo(DateTime.now().toString().substring(0, 10)) >= 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }).toList();
   }
 
   void setDataSelezionata(DateTime data) {

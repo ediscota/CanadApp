@@ -16,29 +16,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  void _submitForm() async {
+  void _submitForm(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final viewModel = context.read<LoginViewModel>();
 
       final success = await viewModel.login(
         _emailController.text.trim(),
         _passwordController.text.trim(),
+        context,
       );
-
-      final message =
-          success ? 'Login riuscito!' : viewModel.errore ?? 'Errore imprevisto';
-
-      if (!success) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(message)));
-      }
-
-      if (success) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
-      }
     }
   }
 
@@ -63,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF029ED6),
+        backgroundColor: const Color(0xFF1E88E5),
         centerTitle: true,
         title: const Text(
           'CanadApp',
@@ -129,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
-                              onPressed: _submitForm,
+                              onPressed: () => _submitForm(context),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF029ED6),
                                 shape: RoundedRectangleBorder(

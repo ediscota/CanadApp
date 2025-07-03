@@ -18,7 +18,11 @@ class LoginViewModel extends ChangeNotifier {
   String? get errore => _errore;
   User? get utente => _utente;
 
-  Future<bool> login(String email, String password) async {
+  Future<bool> login(
+    String email,
+    String password,
+    BuildContext context,
+  ) async {
     _isLoading = true;
     _errore = null;
     notifyListeners();
@@ -28,6 +32,10 @@ class LoginViewModel extends ChangeNotifier {
       if (result == null) {
         _errore = 'Email o password errate';
         _utente = null;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(_errore!), duration: Duration(seconds: 1)),
+        );
+        _isLoading = false;
         return false;
       } else {
         _utente = result;
@@ -42,11 +50,22 @@ class LoginViewModel extends ChangeNotifier {
           );
           print('Utente salvato: ${_utente!.id}');
         });
+        /*final message = 'Login riuscito!';
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));*/
+        await Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
         return true;
       }
     } catch (e) {
       _errore = 'Errore di connessione';
       _utente = null;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_errore!), duration: Duration(seconds: 1)),
+      );
+      _isLoading = false;
       return false;
     } finally {
       _isLoading = false;
@@ -61,7 +80,7 @@ class LoginViewModel extends ChangeNotifier {
 
       if (email != null && password != null) {
         final viewModel = context.read<LoginViewModel>();
-        final success = await viewModel.login(email, password);
+        final success = await viewModel.login(email, password, context);
         if (success) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => const HomeScreen()),
