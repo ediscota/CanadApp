@@ -37,7 +37,7 @@ class _CalendarPrenotazioneState extends State<CalendarPrenotazione> {
         cont++;
       }
     }
-    return cont < 3; // modificare da 1 a 8
+    return cont < 60; // 12 * 5 max persone al giorno
   }
 
   bool isValidTime(hour) {
@@ -47,14 +47,14 @@ class _CalendarPrenotazioneState extends State<CalendarPrenotazione> {
     final salaPesiViewModel = context.read<SalaPesiViewModel>();
     final prenotazioni = salaPesiViewModel.prenotazioni;
     final selectedTime = TimeOfDay(hour: hour, minute: 0);
+    int cont = 0;
     for (var prenotazione in prenotazioni) {
       if (prenotazione.data == _selectedDay!.toString().substring(0, 10) &&
           prenotazione.ora == selectedTime.format(context)) {
-        return false; // L'orario è già occupato
+        cont++; // L'orario è già occupato
       }
     }
-    print('Vero');
-    return true;
+    return cont < 5; // max 5 persona per fascia oraria
   }
 
   @override
@@ -138,7 +138,10 @@ class _CalendarPrenotazioneState extends State<CalendarPrenotazione> {
                       await salaPesiViewModel.aggiungiPrenotazione(data, ora);
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Prenotazione aggiunta!')),
+                        SnackBar(
+                          content: Text('Prenotazione aggiunta!'),
+                          duration: Duration(seconds: 1),
+                        ),
                       );
                     } catch (e) {
                       ScaffoldMessenger.of(

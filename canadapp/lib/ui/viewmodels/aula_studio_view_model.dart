@@ -9,9 +9,12 @@ class AulaStudioViewModel extends ChangeNotifier {
   final UserRepository _userRepository;
   AulaStudio? _stato;
   AulaStudio? get stato => _stato;
+  bool _qrState = false;
+  bool get qrState => _qrState;
 
   AulaStudioViewModel(this._repository, this._userRepository) {
     _ascoltaDisponibilita();
+    getQrCodeState();
   }
 
   void _ascoltaDisponibilita() {
@@ -19,6 +22,12 @@ class AulaStudioViewModel extends ChangeNotifier {
       _stato = dati;
       notifyListeners();
     });
+  }
+
+  Future<void> getQrCodeState() async {
+    final instance = await SharedPreferences.getInstance();
+    bool qrState = instance.getBool('qrState') ?? false;
+    _qrState = qrState;
   }
 
   Future<void> handleQrCodeScanned(String code) async {
@@ -36,5 +45,7 @@ class AulaStudioViewModel extends ChangeNotifier {
 
     await _userRepository.setStudy(userId, qrState);
     instance.setBool('qrState', qrState);
+    _qrState = qrState;
+    notifyListeners();
   }
 }
